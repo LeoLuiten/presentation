@@ -1,0 +1,1 @@
+{"openapi":"3.0.1","info":{"title":"'presentation'","description":"'presentation'","contact":{"name":"Lucas","email":"leonardoluiten@gmail.com"},"version":"'0.0.1-SNAPSHOT'"},"servers":[{"url":"http://localhost:8080","description":"'presentation'"}],"paths":{},"components":{}}
