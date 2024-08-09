@@ -1,5 +1,6 @@
 package leoluiten.presentation.services.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import leoluiten.presentation.entities.PlayerEntity;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.PlayerJpaRepository;
@@ -8,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -32,7 +34,11 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player getPlayerById(Long id) {
         PlayerEntity playerEntity = playerJpaRepository.getReferenceById(id);
-        return modelMapper.map(playerEntity, Player.class);
+        if(Objects.isNull(playerEntity.getUserName())) {
+            throw new EntityNotFoundException();
+        } else {
+            return modelMapper.map(playerEntity, Player.class);
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package leoluiten.presentation.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import leoluiten.presentation.dtos.common.ErrorApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ErrorApi> handleError(ResponseStatusException exception) {
         ErrorApi error = buildError(exception.getReason(), HttpStatus.valueOf(exception.getStatusCode().value()));
         return ResponseEntity.status(exception.getStatusCode()).body(error);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorApi> handleError(EntityNotFoundException exception) {
+        ErrorApi error = buildError(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     /**
