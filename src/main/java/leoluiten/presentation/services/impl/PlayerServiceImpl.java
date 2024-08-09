@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Implementation of the {@link PlayerService} interface. This service
  * provides methods for retrieving and saving player information.
@@ -34,16 +36,27 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     /**
-     * Saves a player, converting the model object to an entity for persistence,
-     * and then converting it back to a model object after saving.
+     * Saves a new player to the database if a player with the same username or email does not already exist.
+     * The method converts the provided {@link Player} model object to an entity for persistence,
+     * and after saving, converts it back to a {@link Player} model object.
+     *
+     * If a player with the same username or email already exists, the method returns {@code null}.
      *
      * @param player the {@link Player} model object to be saved.
-     * @return the saved {@link Player} model object.
+     * @return the saved {@link Player} model object, or {@code null}
+     * if a player with the same username or email already exists.
      */
     @Override
     public Player savePlayer(Player player) {
-        PlayerEntity playerEntity = modelMapper.map(player, PlayerEntity.class);
-        PlayerEntity playerEntitySaved = playerJpaRepository.save(playerEntity);
-        return modelMapper.map(playerEntitySaved, Player.class);
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameOrEmail(
+                player.getUserName(), player.getEmail()
+        );
+        if (playerEntityOptional.isEmpty()) {
+            PlayerEntity playerEntity = modelMapper.map(player, PlayerEntity.class);
+            PlayerEntity playerEntitySaved = playerJpaRepository.save(playerEntity);
+            return modelMapper.map(playerEntitySaved, Player.class);
+        } else {
+            return null;
+        }
     }
 }

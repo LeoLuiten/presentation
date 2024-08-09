@@ -4,8 +4,12 @@ import jakarta.validation.Valid;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Objects;
 
 /**
  * REST controller for managing players. Provides endpoints to retrieve
@@ -34,9 +38,15 @@ public class PlayerController {
      *
      * @param player the {@link Player} object containing the player's data to be saved.
      * @return a {@link ResponseEntity} containing the saved {@link Player} object.
+     * @throws ResponseStatusException if the player data cannot be saved due to existing username or email.
      */
     @PostMapping("")
     public ResponseEntity<Player> savePlayer(@RequestBody @Valid Player player) {
-        return ResponseEntity.ok(playerService.savePlayer(player));
+        Player playerSaved = playerService.savePlayer(player);
+        if(Objects.isNull(playerSaved)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or email already exists");
+        } else {
+            return ResponseEntity.ok(playerSaved);
+        }
     }
 }

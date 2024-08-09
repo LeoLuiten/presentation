@@ -8,11 +8,13 @@ database "players"
 
 [PlayerService] --(getReferenceById
 [PlayerService] --(save
+[PlayerService] --(findByUserNameOrEmail
 getPlayerById -- [PlayerService]
 savePlayer -- [PlayerService]
 
 [PlayerJpaRepository] --("players"
 getReferenceById --[PlayerJpaRepository]
 save -- [PlayerJpaRepository]
+findByUserNameOrEmail -- [PlayerJpaRepository]
 
 @enduml

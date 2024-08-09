@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -39,6 +40,18 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ErrorApi> handleError(MethodArgumentNotValidException exception) {
         ErrorApi error = buildError(exception.getMessage(), HttpStatus.BAD_REQUEST);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    /**
+     * Handles validation errors specifically related to Response status exceptions
+     *
+     * @param exception the ResponseStatusException that was thrown.
+     * @return a ResponseEntity containing an ErrorApi object with the error details.
+     */
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorApi> handleError(ResponseStatusException exception) {
+        ErrorApi error = buildError(exception.getReason(), HttpStatus.valueOf(exception.getStatusCode().value()));
+        return ResponseEntity.status(exception.getStatusCode()).body(error);
     }
 
     /**
