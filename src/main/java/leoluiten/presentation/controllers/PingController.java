@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PingController {
 
     @Operation(
-            summary = "Check healthy of the app",
-            description = "If the app it's alive response pong")
+            summary = "Check for the availability of the app",
+            description = "If the app is running, then the response should be 'pong'")
     @ApiResponses( value = {
             @ApiResponse(
                     responseCode = "200",
