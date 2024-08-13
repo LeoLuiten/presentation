@@ -5,16 +5,28 @@ database "players"
 
 [PlayerController] --(getPlayerById
 [PlayerController] --(savePlayer
+[LoginController] --(login
 
+
+[LoginService] --(getPlayerByUserNameAndPassword
+[LoginService] --(getPlayerByEmailAndPassword
+login --[LoginService]
 [PlayerService] --(getReferenceById
 [PlayerService] --(save
 [PlayerService] --(findByUserNameOrEmail
+[PlayerService] --(findByUserNameAndPassword
+[PlayerService] --(findByEmailAndPassword
+
 getPlayerById -- [PlayerService]
 savePlayer -- [PlayerService]
+getPlayerByUserNameAndPassword -- [PlayerService]
+getPlayerByEmailAndPassword -- [PlayerService]
 
 [PlayerJpaRepository] --("players"
 getReferenceById --[PlayerJpaRepository]
 save -- [PlayerJpaRepository]
 findByUserNameOrEmail -- [PlayerJpaRepository]
+findByUserNameAndPassword -- [PlayerJpaRepository]
+findByEmailAndPassword -- [PlayerJpaRepository]
 
 @enduml

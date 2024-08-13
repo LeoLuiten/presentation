@@ -25,4 +25,10 @@ public interface PlayerService {
      * @return the saved {@link Player} object.
      */
     Player savePlayer(Player player);
+
+    Player getPlayerByUserNameAndPassword(String userName, String password);
+
+    Player getPlayerByEmailAndPassword(String email, String password);
+
+    Player getPlayerByUserNameOrEmailAndPassword(String identity, String password);
 }

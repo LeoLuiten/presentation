@@ -65,4 +65,34 @@ public class PlayerServiceImpl implements PlayerService {
             return null;
         }
     }
+
+    @Override
+    public Player getPlayerByUserNameAndPassword(String userName, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameAndPassword(userName, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Username or password invalid");
+        }
+    }
+
+    @Override
+    public Player getPlayerByEmailAndPassword(String email, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByEmailAndPassword(email, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Some credentials are invalid!");
+        }
+    }
+
+    @Override
+    public Player getPlayerByUserNameOrEmailAndPassword(String identity, String password) {
+        Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameOrEmailAndPassword(identity, password);
+        if(playerEntityOptional.isPresent()) {
+            return modelMapper.map(playerEntityOptional.get(), Player.class);
+        } else {
+            throw new EntityNotFoundException("Some parameters are incorrect!");
+        }
+    }
 }
