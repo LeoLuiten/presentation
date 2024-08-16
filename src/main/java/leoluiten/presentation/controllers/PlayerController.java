@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import leoluiten.presentation.dtos.common.ErrorApi;
+import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -81,5 +83,11 @@ public class PlayerController {
         } else {
             return ResponseEntity.ok(playerSaved);
         }
+    }
+
+    @GetMapping("{id}/matches")
+    public ResponseEntity<List<Match>> getMatchesOfPlayer(@PathVariable Long id) {
+        List<Match> matches = playerService.getPlayerMatches(id);
+        return ResponseEntity.ok(matches);
     }
 }

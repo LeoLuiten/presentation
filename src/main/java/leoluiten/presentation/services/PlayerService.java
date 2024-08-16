@@ -1,7 +1,10 @@
 package leoluiten.presentation.services;
 
+import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service interface for managing players. Provides methods for
@@ -31,4 +34,6 @@ public interface PlayerService {
     Player getPlayerByEmailAndPassword(String email, String password);
 
     Player getPlayerByUserNameOrEmailAndPassword(String identity, String password);
+
+    List<Match> getPlayerMatches(Long id);
 }

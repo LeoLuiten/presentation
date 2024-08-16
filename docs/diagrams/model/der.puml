@@ -31,7 +31,7 @@ entity "games" {
 entity "matches" {
     @ id : number <<generated>>
     # game_id : number
-    # match_id : number
+    # player_id : number
     status : varchar
     end_at : datetime
     created_at : datetime
