@@ -17,4 +17,28 @@ entity "players" {
     updated_at : datetime
 }
 
+entity "games" {
+    @ id : number <<generated>>
+    code : varchar
+    name : varchar
+    game_description: varchar
+    avatar : varchar
+    rules : blob
+    created_at : datetime
+    updated_at : datetime
+}
+
+entity "matches" {
+    @ id : number <<generated>>
+    # game_id : number
+    # match_id : number
+    status : varchar
+    end_at : datetime
+    created_at : datetime
+    updated_at : datetime
+}
+
+matches }|--|| players
+matches }|--|| games
+
 @enduml

@@ -2,9 +2,8 @@
 skinparam componentStyle uml1
 
 database "players"
+
 package "Controllers" {
-[PlayerController] --(getPlayerById
-[PlayerController] --(savePlayer
 [LoginController] --(login
 }
 
@@ -12,39 +11,34 @@ package "Controllers" {
 package "Services" {
 [LoginService] --(getPlayerByUserNameAndPassword
 [LoginService] --(getPlayerByEmailAndPassword
+[LoginService] --(savePlayer
 
-[PlayerService] --(getReferenceById
-[PlayerService] --(save
 [PlayerService] --(findByUserNameOrEmail
 [PlayerService] --(findByUserNameAndPassword
 [PlayerService] --(findByEmailAndPassword
+[PlayerService] --(save
 
 login --[LoginService]
-getPlayerById -- [PlayerService]
-savePlayer -- [PlayerService]
 getPlayerByUserNameAndPassword -- [PlayerService]
 getPlayerByEmailAndPassword -- [PlayerService]
-
+savePlayer -- [PlayerService]
 }
 
 package "Repositories" {
-
 [PlayerJpaRepository] --("players"
-getReferenceById --[PlayerJpaRepository]
 save -- [PlayerJpaRepository]
 findByUserNameOrEmail -- [PlayerJpaRepository]
+findByUserNameAndPassword -- [PlayerJpaRepository]
+findByEmailAndPassword -- [PlayerJpaRepository]
+}
+
+@enduml
+
+getReferenceById --[PlayerJpaRepository]
+
+
 
 getPlayerById -- [PlayerService]
 savePlayer -- [PlayerService]
 getPlayerByUserNameAndPassword -- [PlayerService]
 getPlayerByEmailAndPassword -- [PlayerService]
-
-
-
-
-findByUserNameAndPassword -- [PlayerJpaRepository]
-findByEmailAndPassword -- [PlayerJpaRepository]
-
-}
-
-@enduml

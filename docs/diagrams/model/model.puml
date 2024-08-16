@@ -9,4 +9,30 @@ class Player {
     LocalDateTime lastLoginDate
 }
 
+class Game {
+    Long id
+    String code
+    String name
+    String description
+    String rules
+}
+
+class Match {
+    Long id
+    Game game
+    Player player
+    LocalDateTime createdDate
+    MatchStatus status
+}
+
+enum MatchStatus {
+    STARTED
+    FINISHED
+    CANCELED
+}
+
+MatchStatus --* Match
+Game --* Match
+Player --* Match
+
 @enduml
