@@ -1,6 +1,5 @@
 package leoluiten.presentation.services;
 
-import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +34,4 @@ public interface PlayerService {
 
     Player getPlayerByUserNameOrEmailAndPassword(String identity, String password);
 
-    List<Match> getPlayerMatches(Long id);
 }

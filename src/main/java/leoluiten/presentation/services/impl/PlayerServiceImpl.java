@@ -2,10 +2,8 @@ package leoluiten.presentation.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import leoluiten.presentation.entities.PlayerEntity;
-import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.PlayerJpaRepository;
-import leoluiten.presentation.services.MatchService;
 import leoluiten.presentation.services.PlayerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +26,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private MatchService matchService;
-
     /**
-     * Retrieves a player by their ID, converting the entity to a model object.
+     * Retrieves a player by its ID, converting the entity to a model object.
      *
      * @param id the ID of the player to retrieve.
      * @return the {@link Player} model object corresponding to the retrieved player entity.
@@ -102,8 +97,4 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
-    @Override
-    public List<Match> getPlayerMatches(Long id){
-        return matchService.getPlayerMatches(id);
-    }
 }

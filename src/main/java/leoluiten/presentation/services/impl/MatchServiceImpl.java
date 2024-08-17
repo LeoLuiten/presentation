@@ -1,13 +1,20 @@
 package leoluiten.presentation.services.impl;
 
+import leoluiten.presentation.dtos.match.MatchDTO;
 import leoluiten.presentation.entities.MatchEntity;
+import leoluiten.presentation.models.Game;
 import leoluiten.presentation.models.Match;
+import leoluiten.presentation.models.MatchStatus;
+import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
+import leoluiten.presentation.services.GameService;
 import leoluiten.presentation.services.MatchService;
+import leoluiten.presentation.services.PlayerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +26,16 @@ public class MatchServiceImpl implements MatchService {
     private MatchJpaRepository matchJpaRepository;
 
     @Autowired
+    private PlayerService playerService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private GameService gameService;
+
     @Override
-    public List<Match> getPlayerMatches(Long playerId) {
+    public List<Match> getMatchesByPlayer(Long playerId) {
         List<Match> matches = new ArrayList<>();
         Optional<List<MatchEntity>> optionalMatchEntities = matchJpaRepository.getAllByPlayerId(playerId);
 //        if (optionalMatchEntities.isPresent()) {
@@ -36,5 +49,20 @@ public class MatchServiceImpl implements MatchService {
                 }
         ));
         return matches;
+    }
+
+    @Override
+    public Match createMatch(MatchDTO matchDTO) {
+        Match match = new Match();
+        Player player = playerService.getPlayerById(matchDTO.getPlayerId());
+        Game game = gameService.getGame(matchDTO.getGameId());
+        match.setPlayer(player);
+        match.setGame(game);
+        match.setCreatedDate(LocalDateTime.now());
+        match.setStatus(MatchStatus.STARTED);
+        MatchEntity matchEntitySaved = matchJpaRepository.save(
+                modelMapper.map(match, MatchEntity.class));
+        return modelMapper.map(matchEntitySaved, Match.class);
+
     }
 }

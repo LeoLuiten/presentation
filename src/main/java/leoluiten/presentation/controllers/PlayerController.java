@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import leoluiten.presentation.dtos.common.ErrorApi;
 import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
+import leoluiten.presentation.services.MatchService;
 import leoluiten.presentation.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ public class PlayerController {
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private MatchService matchService;
 
     @Operation(
             summary = "Gets a player by its id.",
@@ -87,7 +91,7 @@ public class PlayerController {
 
     @GetMapping("{id}/matches")
     public ResponseEntity<List<Match>> getMatchesOfPlayer(@PathVariable Long id) {
-        List<Match> matches = playerService.getPlayerMatches(id);
+        List<Match> matches = matchService.getMatchesByPlayer(id);
         return ResponseEntity.ok(matches);
     }
 }
