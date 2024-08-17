@@ -12,7 +12,9 @@
 	<artifactId>presentation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>presentation</name>
-	<description>presentation</description>
+	<description>
+		This Spring Boot application is a demonstration of modern API development practices, showcasing concepts such as JUnit testing, separation of concerns, design patterns, and API contract design. The application features a well-documented API, accessible via Swagger UI at http://localhost:8080/swagger-ui/index.html#/ (This can be changed on the application.properties file), providing detailed information on available endpoints and models. It includes endpoints for player management, match tracking, and user authentication, all designed to adhere to best practices in API design and implementation
+	</description>
 	<url/>
 	<licenses>
 		<license/>

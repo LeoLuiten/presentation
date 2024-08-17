@@ -1,6 +1,7 @@
 package leoluiten.presentation.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -89,6 +90,19 @@ public class PlayerController {
         }
     }
 
+    @Operation(
+            summary = "Get matches of a player",
+            description = "Returns a list of matches associated with a specific player based on their ID. " +
+                    "If the player does not exist, it will return a 404 error."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content =
+            @Content(array = @ArraySchema(schema = @Schema(implementation = Match.class)))),
+            @ApiResponse(responseCode = "404", description = "Player not found", content =
+            @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content =
+            @Content(schema = @Schema(implementation = ErrorApi.class)))
+    })
     @GetMapping("{id}/matches")
     public ResponseEntity<List<Match>> getMatchesOfPlayer(@PathVariable Long id) {
         List<Match> matches = matchService.getMatchesByPlayer(id);
