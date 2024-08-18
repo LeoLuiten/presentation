@@ -1,5 +1,6 @@
 package leoluiten.presentation.services;
 
+import leoluiten.presentation.dtos.player.PlayerDTO;
 import leoluiten.presentation.models.Player;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public interface PlayerService {
      * @return the saved {@link Player} object.
      */
     Player savePlayer(Player player);
+
+    Player savePlayer(PlayerDTO playerDTO);
 
     Player getPlayerByUserNameAndPassword(String userName, String password);
 

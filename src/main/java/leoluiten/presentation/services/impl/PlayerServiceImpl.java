@@ -1,6 +1,7 @@
 package leoluiten.presentation.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import leoluiten.presentation.dtos.player.PlayerDTO;
 import leoluiten.presentation.entities.PlayerEntity;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.PlayerJpaRepository;
@@ -55,6 +56,16 @@ public class PlayerServiceImpl implements PlayerService {
      */
     @Override
     public Player savePlayer(Player player) {
+        return savePlayerInternal(player);
+    }
+
+    @Override
+    public Player savePlayer(PlayerDTO playerDTO) {
+        Player player = modelMapper.map(playerDTO, Player.class); // Convert DTO to Player
+        return savePlayerInternal(player);
+    }
+
+    private Player savePlayerInternal(Player player) {
         Optional<PlayerEntity> playerEntityOptional = playerJpaRepository.findByUserNameOrEmail(
                 player.getUserName(), player.getEmail()
         );

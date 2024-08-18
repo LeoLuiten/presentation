@@ -1,7 +1,7 @@
 INSERT INTO players (id ,user_name, password, email, avatar, last_login, date_created, updated_at)
 VALUES (1000000,'APP', null, null, null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO players (id ,user_name, password, email, avatar, last_login, date_created, updated_at)
-VALUES (100, 'lluiten', 'Password#03', 'email@email.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (100, 'lluiten', 'Password#03', 'email2@email.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO games (id, code, name, description, rules)
 VALUES (1000000, 'RPS', 'Rock Paper Scissors',
