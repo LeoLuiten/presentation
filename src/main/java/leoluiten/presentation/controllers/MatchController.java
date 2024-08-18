@@ -9,14 +9,13 @@ import jakarta.validation.Valid;
 import leoluiten.presentation.dtos.common.ErrorApi;
 import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.models.Match;
+import leoluiten.presentation.models.Player;
+import leoluiten.presentation.models.Game;
 import leoluiten.presentation.services.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -60,5 +59,16 @@ public class MatchController {
                     .toUri();
             return ResponseEntity.created(location).body(matchSaved);
         }
+    }
+
+    /**
+     * Retrieves a match by their unique ID.
+     *
+     * @param id the ID of the match to retrieve.
+     * @return a {@link ResponseEntity} containing the {@link Match} object corresponding to the provided ID.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Match> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(matchService.getMatchById(id));
     }
 }

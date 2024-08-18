@@ -28,4 +28,12 @@ public interface MatchService {
      * @return the {@link Match} corresponding to the provided ID.
      */
     Match createMatch (MatchDTO match);
+
+    /**
+     * Retrieves a match object along the information of the game and player associated to it.
+     *
+     * @param id
+     * @return a Match object containing information of a Match and its related game and player
+     */
+    Match getMatchById (Long id);
 }

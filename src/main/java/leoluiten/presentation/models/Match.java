@@ -17,6 +17,6 @@ public class Match {
     private Player player;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
     private MatchStatus status;
 }
