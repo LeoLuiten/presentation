@@ -11,11 +11,11 @@ public class Game {
 
     private Long id;
 
-    private String game;
+    private String code;
 
-    private String player;
+    private String name;
 
-    private String createdDate;
+    private String description;
 
-    private String status;
+    private String rules;
 }

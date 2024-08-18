@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import leoluiten.presentation.dtos.common.ErrorApi;
-import leoluiten.presentation.dtos.player.PlayerDTO;
+import leoluiten.presentation.dtos.PlayerDTO;
 import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.services.MatchService;

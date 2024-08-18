@@ -1,10 +1,8 @@
 package leoluiten.presentation.services;
 
-import leoluiten.presentation.dtos.player.PlayerDTO;
+import leoluiten.presentation.dtos.PlayerDTO;
 import leoluiten.presentation.models.Player;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Service interface for managing players. Provides methods for

@@ -1,6 +1,6 @@
 package leoluiten.presentation.services.impl;
 
-import leoluiten.presentation.dtos.match.MatchDTO;
+import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.entities.MatchEntity;
 import leoluiten.presentation.models.Game;
 import leoluiten.presentation.models.Match;

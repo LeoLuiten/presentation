@@ -21,7 +21,7 @@ entity "games" {
     @ id : number <<generated>>
     code : varchar
     name : varchar
-    game_description: varchar
+    description: varchar
     avatar : varchar
     rules : blob
     created_at : datetime

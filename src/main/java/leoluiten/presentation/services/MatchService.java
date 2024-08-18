@@ -1,7 +1,6 @@
 package leoluiten.presentation.services;
 
-import leoluiten.presentation.dtos.match.MatchDTO;
-import leoluiten.presentation.models.Game;
+import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.models.Match;
 import org.springframework.stereotype.Service;
 

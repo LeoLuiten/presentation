@@ -1,7 +1,7 @@
 package leoluiten.presentation.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import leoluiten.presentation.dtos.player.PlayerDTO;
+import leoluiten.presentation.dtos.PlayerDTO;
 import leoluiten.presentation.entities.PlayerEntity;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.PlayerJpaRepository;
@@ -10,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 

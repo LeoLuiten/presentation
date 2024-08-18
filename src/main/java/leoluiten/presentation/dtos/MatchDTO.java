@@ -1,4 +1,4 @@
-package leoluiten.presentation.dtos.match;
+package leoluiten.presentation.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
