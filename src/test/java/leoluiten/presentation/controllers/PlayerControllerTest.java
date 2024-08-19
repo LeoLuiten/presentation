@@ -1,6 +1,5 @@
 package leoluiten.presentation.controllers;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -8,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leoluiten.presentation.models.Player;
+import leoluiten.presentation.services.MatchService;
 import leoluiten.presentation.services.PlayerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,11 +48,13 @@ class PlayerControllerTest {
     @MockBean
     private PlayerService playerService;
 
+    @MockBean
+    private MatchService matchService;
+
     /**
      * This test case verifies the `getById` method of the PlayerController.
      * It sets up a mock Player object and configures the PlayerService's `getPlayerById` method
      * to return this mock player when called with the ID 1.
-     *
      * The test performs a GET request to "/players/1" and verifies that the response:
      * <ul>
      *   <li>Has an HTTP status of OK (200).</li>
@@ -67,13 +69,13 @@ class PlayerControllerTest {
     @Test
     void getByIdTest() throws Exception {
         Player player = new Player();
-        player.setId(1l);
+        player.setId(1L);
         player.setEmail("email@email.com");
         player.setUserName("anUser");
         player.setPassword("Password#03");
 
 
-        when(playerService.getPlayerById(1l)).thenReturn(player);
+        when(playerService.getPlayerById(1L)).thenReturn(player);
         this.mockMvc.perform(get("/players/1")).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName").value("anUser"))
                 .andExpect(jsonPath("$.email").value("email@email.com"))
