@@ -38,7 +38,28 @@ entity "matches" {
     updated_at : datetime
 }
 
+entity "matches_rps" {
+    @ id : number <<ref>>
+    number_of_plays : number
+    plays_reminder : number
+    player_1_score : number
+    player_2_score : number
+    # winner : number
+}
+
+entity "plays_rps" {
+    @ id : number <<generated>>
+    # match_id : number
+    hand_shape_player_1 : varchar
+    hand_shape_player_2 : varchar
+    # winner : number
+}
+
 matches }|--|| players
 matches }|--|| games
+matches ||-|| matches_rps
+matches_rps ||-|{ plays_rps
+matches_rps }|-|| players
+plays_rps }|-|| players
 
 @enduml

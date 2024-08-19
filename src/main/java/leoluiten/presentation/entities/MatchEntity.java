@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "matches")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

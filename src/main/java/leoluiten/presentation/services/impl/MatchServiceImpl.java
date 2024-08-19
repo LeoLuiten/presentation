@@ -3,13 +3,13 @@ package leoluiten.presentation.services.impl;
 import jakarta.persistence.EntityNotFoundException;
 import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.entities.MatchEntity;
-import leoluiten.presentation.entities.PlayerEntity;
 import leoluiten.presentation.models.Game;
 import leoluiten.presentation.models.Match;
 import leoluiten.presentation.models.MatchStatus;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
 import leoluiten.presentation.services.GameService;
+import leoluiten.presentation.services.MatchFactory;
 import leoluiten.presentation.services.MatchService;
 import leoluiten.presentation.services.PlayerService;
 import org.modelmapper.ModelMapper;
@@ -41,14 +41,9 @@ public class MatchServiceImpl implements MatchService {
     public List<Match> getMatchesByPlayer(Long playerId) {
         List<Match> matches = new ArrayList<>();
         Optional<List<MatchEntity>> optionalMatchEntities = matchJpaRepository.getAllByPlayerId(playerId);
-//        if (optionalMatchEntities.isPresent()) {
-//            optionalMatchEntities.get().forEach(
-//                    me -> {matches.add(modelMapper.map(me, Match.class));}
-//            );
-//        }
         optionalMatchEntities.ifPresent(matchEntities -> matchEntities.forEach(
                 me -> {
-                    matches.add(modelMapper.map(me, Match.class));
+                    matches.add(modelMapper.map(me, MatchFactory.createMatch(me.getGame().getCode()).getClass()));
                 }
         ));
         return matches;
@@ -56,9 +51,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Match createMatch(MatchDTO matchDTO) {
-        Match match = new Match();
         Player player = playerService.getPlayerById(matchDTO.getPlayerId());
         Game game = gameService.getGame(matchDTO.getGameId());
+        Match match = MatchFactory.createMatch(game.getCode());
         match.setPlayer(player);
         match.setGame(game);
         match.setCreatedAt(LocalDateTime.now());

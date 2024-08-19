@@ -1,5 +1,10 @@
 @startuml
 
+skinparam class {
+    BackgroundColor<<Match>> PaleGreen
+    BackgroundColor<<MatchRps>> PaleGoldenRod
+}
+
 class Player {
     Long id
     String userName
@@ -17,7 +22,13 @@ class Game {
     String rules
 }
 
-class Match {
+enum MatchStatus {
+    STARTED
+    FINISHED
+    CANCELED
+}
+
+abstract class Match {
     Long id
     Game game
     Player player
@@ -25,14 +36,35 @@ class Match {
     MatchStatus status
 }
 
-enum MatchStatus {
-    STARTED
-    FINISHED
-    CANCELED
+class MatchRps {
+    Integer numberOfPlays;
+    Integer remainingPlays;
+    Integer player1Score;
+    Integer player2Score;
+    List<PlayRps> plays;
+    Long winnerId;
 }
 
-MatchStatus --* Match
-Game --* Match
-Player --* Match
+class PlayRps {
+    Long id;
+    Long matchRpsId;
+    HandShape handShapePlayer1;
+    HandShape handShapePlayer2;
+    Long winnerId;
+}
+
+enum HandShape {
+    ROCK
+    PAPER
+    SCISSORS
+}
+
+Player -down-> Match
+Game -down-> Match
+MatchStatus -down-> Match
+
+Match <|-down- MatchRps
+MatchRps -down-> PlayRps
+HandShape -right-> PlayRps
 
 @enduml
