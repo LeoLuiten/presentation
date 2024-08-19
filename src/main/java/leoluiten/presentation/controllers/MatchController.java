@@ -61,12 +61,18 @@ public class MatchController {
         }
     }
 
-    /**
-     * Retrieves a match by their unique ID.
-     *
-     * @param id the ID of the match to retrieve.
-     * @return a {@link ResponseEntity} containing the {@link Match} object corresponding to the provided ID.
-     */
+    @Operation(
+            summary = "Gets a match by its id.",
+            description = "Returns either a matching Match or a 404 status code error."
+    )
+    @ApiResponses( value = {
+            @ApiResponse( responseCode = "200", description = "Successful operation", content =
+            @Content(schema = @Schema(implementation = Player.class))),
+            @ApiResponse( responseCode = "404", description = "Not found", content =
+            @Content(schema = @Schema(implementation = ErrorApi.class))),
+            @ApiResponse( responseCode = "500", description = "Internal server error", content =
+            @Content(schema = @Schema(implementation = ErrorApi.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Match> getById(@PathVariable Long id) {
         return ResponseEntity.ok(matchService.getMatchById(id));
