@@ -10,6 +10,37 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents an abstract game match.
+ * <p>
+ * This class serves as a base for different types of game matches. It is abstract and cannot be
+ * instantiated directly. The specific subclass of {@code Match} is determined by the type of game
+ * associated with the match, using Jackson annotations to handle polymorphic JSON serialization
+ * and deserialization.
+ * </p>
+ * <p>
+ * The {@link JsonTypeInfo} and {@link JsonSubTypes} annotations are used to define how Jackson
+ * should handle the deserialization of subclasses. Currently, {@link MatchRps} is a known subclass
+ * of {@code Match}.
+ * </p>
+ *
+ * <p>Key Fields:</p>
+ * <ul>
+ *   <li>{@code id}: Unique identifier for the match.</li>
+ *   <li>{@code game}: The game associated with this match.</li>
+ *   <li>{@code player}: The player participating in this match.</li>
+ *   <li>{@code createdAt}: The date and time when the match was created.</li>
+ *   <li>{@code status}: The current status of the match.</li>
+ * </ul>
+ *
+ * <p>Annotations:</p>
+ * <ul>
+ *   <li>{@link JsonTypeInfo}: Specifies how Jackson should include type information during serialization.</li>
+ *   <li>{@link JsonSubTypes}: Defines the subtypes of {@code Match} for polymorphic deserialization.</li>
+ * </ul>
+ *
+ * @see leoluiten.presentation.models.rps.MatchRps
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = MatchRps.class),
