@@ -5,8 +5,8 @@ import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.entities.MatchEntity;
 import leoluiten.presentation.models.Game;
 import leoluiten.presentation.models.Match;
-import leoluiten.presentation.models.MatchStatus;
 import leoluiten.presentation.models.Player;
+import leoluiten.presentation.repositories.jpa.MatchEntityFactory;
 import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
 import leoluiten.presentation.services.GameService;
 import leoluiten.presentation.services.MatchFactory;
@@ -16,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +54,7 @@ public class MatchServiceImpl implements MatchService {
         Optional<List<MatchEntity>> optionalMatchEntities = matchJpaRepository.getAllByPlayerId(playerId);
         optionalMatchEntities.ifPresent(matchEntities -> matchEntities.forEach(
                 me -> {
-                    matches.add(modelMapper.map(me, MatchFactory.createMatch(me.getGame().getCode()).getClass()));
+                    matches.add(modelMapper.map(me, MatchFactory.getTypeOfMatch(me.getGame().getCode())));
                 }
         ));
         return matches;
@@ -74,9 +73,8 @@ public class MatchServiceImpl implements MatchService {
      * <ol>
      *   <li>Retrieve the {@link Player} by their ID using {@link PlayerService#getPlayerById(Long)}.</li>
      *   <li>Retrieve the {@link Game} by its ID using {@link GameService#getGame(Long)}.</li>
-     *   <li>Create a new {@link Match} instance using {@link MatchFactory#createMatch(String)} based on the game code.</li>
-     *   <li>Set the player, game, creation time, and status for the new match.</li>
-     *   <li>Save the new match to the database by mapping it to a {@link MatchEntity} and using {@link MatchJpaRepository#save(Object)}.</li>
+     *   <li>Create a new {@link Match} instance using {@link MatchFactory#createMatch(Player, Game)} based on the game code.</li>
+     *   <li>Save the new match to the database by mapping it to a class that extends {@link MatchEntity} and using {@link MatchJpaRepository#save(Object)}.</li>
      *   <li>Return the saved match as a {@link Match} object.</li>
      * </ol>
      *
@@ -89,14 +87,11 @@ public class MatchServiceImpl implements MatchService {
     public Match createMatch(MatchDTO matchDTO) {
         Player player = playerService.getPlayerById(matchDTO.getPlayerId());
         Game game = gameService.getGame(matchDTO.getGameId());
-        Match match = MatchFactory.createMatch(game.getCode());
-        match.setPlayer(player);
-        match.setGame(game);
-        match.setCreatedAt(LocalDateTime.now());
-        match.setStatus(MatchStatus.STARTED);
+        Match match = MatchFactory.createMatch(player, game);
         MatchEntity matchEntitySaved = matchJpaRepository.save(
-                modelMapper.map(match, MatchEntity.class));
-        return modelMapper.map(matchEntitySaved, Match.class);
+                modelMapper.map(match, MatchEntityFactory.getTypeOfMatch(match))
+        );
+        return modelMapper.map(matchEntitySaved, match.getClass());
 
     }
 
