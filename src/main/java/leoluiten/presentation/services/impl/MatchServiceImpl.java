@@ -12,6 +12,7 @@ import leoluiten.presentation.services.GameService;
 import leoluiten.presentation.services.MatchFactory;
 import leoluiten.presentation.services.MatchService;
 import leoluiten.presentation.services.PlayerService;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,11 +104,12 @@ public class MatchServiceImpl implements MatchService {
      */
     @Override
     public Match getMatchById(Long id) {
-        MatchEntity matchEntity = matchJpaRepository.getReferenceById(id);
+        //INFO: https://www.baeldung.com/hibernate-proxy-to-real-entity-object
+        MatchEntity matchEntity = (MatchEntity) Hibernate.unproxy(matchJpaRepository.getReferenceById(id));
         if(Objects.isNull(matchEntity.getGame())) {
             throw new EntityNotFoundException();
         } else {
-            return modelMapper.map(matchEntity, Match.class);
+            return modelMapper.map(matchEntity, MatchFactory.getTypeOfMatch(matchEntity.getGame().getCode()));
         }
     }
 }
