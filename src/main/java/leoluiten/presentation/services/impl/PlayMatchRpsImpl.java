@@ -1,10 +1,17 @@
 package leoluiten.presentation.services.impl;
 
+import leoluiten.presentation.entities.MatchEntity;
+import leoluiten.presentation.entities.MatchRpsEntity;
+import leoluiten.presentation.entities.PlayRpsEntity;
 import leoluiten.presentation.models.MatchStatus;
 import leoluiten.presentation.models.rps.HandShape;
 import leoluiten.presentation.models.rps.MatchRps;
 import leoluiten.presentation.models.rps.PlayRps;
+import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
+import leoluiten.presentation.repositories.jpa.PlayRpsJpaRepository;
 import leoluiten.presentation.services.PlayMatch;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +21,14 @@ import java.util.Random;
 @Service
 public class PlayMatchRpsImpl implements PlayMatch<PlayRps, MatchRps> {
 
+    @Autowired
+    private PlayRpsJpaRepository playRpsJpaRepository;
+
+    @Autowired
+    private MatchJpaRepository matchJpaRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
     private Random random = new Random();
 
     @Override
@@ -26,6 +41,10 @@ public class PlayMatchRpsImpl implements PlayMatch<PlayRps, MatchRps> {
         calculateMatchScore(playRps, matchRps);
         calculateMatchStatus(matchRps);
         matchRps.setUpdatedAt(LocalDateTime.now());
+        PlayRpsEntity playEntityToSave = modelMapper.map(playRps, PlayRpsEntity.class);
+        playRpsJpaRepository.save(playEntityToSave);
+        MatchEntity matchEntityToSave = modelMapper.map(matchRps, MatchRpsEntity.class);
+        matchJpaRepository.save(matchEntityToSave);
         return playRps;
     }
 

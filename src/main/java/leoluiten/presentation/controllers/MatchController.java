@@ -87,6 +87,5 @@ public class MatchController {
         } else {
             return ResponseEntity.ok(playResult);
         }
-
     }
 }

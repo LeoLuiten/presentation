@@ -5,17 +5,16 @@ import jakarta.transaction.Transactional;
 import leoluiten.presentation.dtos.MatchDTO;
 import leoluiten.presentation.dtos.play.PlayRequest;
 import leoluiten.presentation.entities.MatchEntity;
-import leoluiten.presentation.models.Game;
-import leoluiten.presentation.models.Match;
-import leoluiten.presentation.models.Play;
-import leoluiten.presentation.models.Player;
+import leoluiten.presentation.models.*;
 import leoluiten.presentation.repositories.jpa.MatchEntityFactory;
 import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
 import leoluiten.presentation.services.*;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,6 +144,9 @@ public class MatchServiceImpl implements MatchService {
         Match match = this.getMatchById(matchId);
         if (match == null) {
             throw new EntityNotFoundException("Match not found with ID: " + matchId);
+        }
+        if(match.getStatus() != MatchStatus.STARTED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("The match is %s", match.getStatus()));
         }
         // Use a factory to create a Play instance based on the type of match.
         // Since Match is an abstract class, the factory determines the specific game type (e.g., Rock-Paper-Scissors, Tic-Tac-Toe).
