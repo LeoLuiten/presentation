@@ -8,9 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import leoluiten.presentation.dtos.common.ErrorApi;
 import leoluiten.presentation.dtos.MatchDTO;
+import leoluiten.presentation.dtos.play.PlayRequest;
 import leoluiten.presentation.models.Match;
+import leoluiten.presentation.models.Play;
 import leoluiten.presentation.models.Player;
-import leoluiten.presentation.models.Game;
 import leoluiten.presentation.services.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,5 +77,16 @@ public class MatchController {
     @GetMapping("/{id}")
     public ResponseEntity<Match> getById(@PathVariable Long id) {
         return ResponseEntity.ok(matchService.getMatchById(id));
+    }
+
+    @PostMapping("{id}/plays/")
+    public ResponseEntity<Play> saveMatch(@PathVariable Long id, @RequestBody @Valid PlayRequest playRequest) {
+        Play playResult = matchService.play(id, playRequest);
+        if(Objects.isNull(playResult)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There was an error resolving the request");
+        } else {
+            return ResponseEntity.ok(playResult);
+        }
+
     }
 }

@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MatchJpaRepository extends JpaRepository<MatchEntity, Long> {
 
-    Optional<List<MatchEntity>> getAllByPlayerId(Long playerId);
+    @Query("SELECT m FROM MatchEntity m " +
+            "WHERE m.player1.id = :playerId OR m.player2.id = :playerId")
+    List<MatchEntity> getAllByPlayerId(Long playerId);
 }
+

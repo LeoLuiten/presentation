@@ -1,17 +1,17 @@
 package leoluiten.presentation.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import leoluiten.presentation.dtos.MatchDTO;
+import leoluiten.presentation.dtos.play.PlayRequest;
 import leoluiten.presentation.entities.MatchEntity;
 import leoluiten.presentation.models.Game;
 import leoluiten.presentation.models.Match;
+import leoluiten.presentation.models.Play;
 import leoluiten.presentation.models.Player;
 import leoluiten.presentation.repositories.jpa.MatchEntityFactory;
 import leoluiten.presentation.repositories.jpa.MatchJpaRepository;
-import leoluiten.presentation.services.GameService;
-import leoluiten.presentation.services.MatchFactory;
-import leoluiten.presentation.services.MatchService;
-import leoluiten.presentation.services.PlayerService;
+import leoluiten.presentation.services.*;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class MatchServiceImpl implements MatchService {
+
+    private static final Long APP_PLAYER_ID = 1000000L;
 
     @Autowired
     private MatchJpaRepository matchJpaRepository;
@@ -32,34 +33,44 @@ public class MatchServiceImpl implements MatchService {
     private PlayerService playerService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private GameService gameService;
 
     @Autowired
-    private GameService gameService;
+    private PlayStrategyFactory playStrategyFactory;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     /**
      * Retrieves a list of {@link Match} objects associated with a specific player.
      * <p>
      * The {@link Match} class is abstract, and the specific subclass of {@link Match}
      * is determined by the {@link Game} associated with each match. This method uses a
-     * Factory Pattern, implemented via {@link MatchFactory}, to support multiple games.
-     * As a result, the correct subclass of {@link Match} is instantiated based on the game type.
+     * Factory Pattern, implemented via {@link MatchFactory}, to create instances of the
+     * appropriate subclass of {@link Match} based on the game type.
+     * </p>
+     *
+     * <p>
+     * The method fetches all matches where the specified player is either the first player
+     * (player1) or the second player (player2) from the data source using the {@link MatchJpaRepository}.
+     * Each {@link MatchEntity} is then converted into the correct {@link Match} subclass using
+     * the {@link MatchFactory} and added to the returned list.
      * </p>
      *
      * @param playerId the ID of the player whose matches are to be retrieved.
-     * @return a list of {@link Match} instances representing the player's matches.
+     * @return a list of {@link Match} instances representing the matches involving the specified player.
      */
     @Override
     public List<Match> getMatchesByPlayer(Long playerId) {
         List<Match> matches = new ArrayList<>();
-        Optional<List<MatchEntity>> optionalMatchEntities = matchJpaRepository.getAllByPlayerId(playerId);
-        optionalMatchEntities.ifPresent(matchEntities -> matchEntities.forEach(
-                me -> {
-                    matches.add(modelMapper.map(me, MatchFactory.getTypeOfMatch(me.getGame().getCode())));
-                }
-        ));
+        List<MatchEntity> matchEntities = matchJpaRepository.getAllByPlayerId(playerId);
+        matchEntities.forEach(me -> {
+            matches.add(modelMapper.map(me, MatchFactory.getTypeOfMatch(me.getGame().getCode())));
+        });
+
         return matches;
     }
+
 
     /**
      * Creates a new {@link Match} based on the provided {@link MatchDTO}.
@@ -112,4 +123,37 @@ public class MatchServiceImpl implements MatchService {
             return modelMapper.map(matchEntity, MatchFactory.getTypeOfMatch(matchEntity.getGame().getCode()));
         }
     }
+
+    /**
+     * Processes a play within an existing match, applying the rules specific to the game's type.
+     * Both the match and the play are saved correctly according to the game rules (e.g., Rock-Paper-Scissors, Tic-Tac-Toe).
+     *
+     * This method performs the following steps:
+     * 1. Retrieves the match by its ID.
+     * 2. Creates a new Play instance based on the match type and the details provided in the play request.
+     * 3. Uses a strategy pattern to determine how to handle the play based on game-specific rules.
+     * 4. Executes the play within the match context.
+     *
+     * @param matchId The ID of the match in which the play is to be made.
+     * @param playRequest The details of the play to process, including information specific to the game's rules.
+     * @return The result of the play, which includes the updated state of the match.
+     * @throws EntityNotFoundException if no match is found with the given match ID.
+     */
+    @Transactional
+    @Override
+    public Play play(Long matchId, PlayRequest playRequest) {
+        Match match = this.getMatchById(matchId);
+        if (match == null) {
+            throw new EntityNotFoundException("Match not found with ID: " + matchId);
+        }
+        // Use a factory to create a Play instance based on the type of match.
+        // Since Match is an abstract class, the factory determines the specific game type (e.g., Rock-Paper-Scissors, Tic-Tac-Toe).
+        Play play = PlayFactory.getPlayInstance(playRequest, match.getGame().getCode());
+        // Retrieve the appropriate play strategy for the game's rules using the PlayStrategyFactory.
+        // This determines how to handle the play situation according to the game-specific rules.
+        PlayMatch playMatch = playStrategyFactory.getPlayStrategy(match.getGame().getCode());
+        // Execute the play using the appropriate strategy and return the result.
+        return playMatch.play(play, match);
+    }
+
 }

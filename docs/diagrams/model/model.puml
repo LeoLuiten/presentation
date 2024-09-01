@@ -31,7 +31,8 @@ enum MatchStatus {
 abstract class Match {
     Long id
     Game game
-    Player player
+    Player player1
+    Player player2
     LocalDateTime createdDate
     MatchStatus status
 }
@@ -43,6 +44,9 @@ class MatchRps {
     Integer player2Score;
     List<PlayRps> plays;
     Long winnerId;
+}
+
+interface Play{
 }
 
 class PlayRps {
@@ -59,12 +63,13 @@ enum HandShape {
     SCISSORS
 }
 
-Player -down-> Match
-Game -down-> Match
-MatchStatus -down-> Match
+MatchStatus --* Match
+Game --* Match
+Player --* Match
+Match <|-- MatchRps
+MatchRps *-- PlayRps
+PlayRps*-l- HandShape
+PlayRps -r-|> Play
 
-Match <|-down- MatchRps
-MatchRps -down-> PlayRps
-HandShape -right-> PlayRps
 
 @enduml
